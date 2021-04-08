@@ -1,31 +1,32 @@
 import React, { Component } from 'react';
 import giphy from 'giphy-api';
+
 import SearchBar from './search_bar';
 import Gif from './gif';
 import GifList from './gif_list';
 
+const GIPHY_API_KEY = '1KMPHCBIOe3hOjJwCJQX49sRc6cM0oIm';
+
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       gifs: [],
-      selectedGifId: "jrAgdPqTiz2Ew"
+      selectedGifId: "xT9IgDEI1iZyb2wqo8"
     };
     this.search = this.search.bind(this);
     this.selectGif = this.selectGif.bind(this);
-    this.search('homer');
   }
 
-  search = (query) => {
-    giphy('jsN9MEjEDevVR1F2YaH7NtnY35cSbvWf').search({
-      q: query,
-      rating: 'g',
-      limit: 10
-    }, (error, result) => {
+  search(query) {
+    const giphEndpoint = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${query}&limit=10`
+    fetch(giphEndpoint).then(response => response.json()).then((data) => {
+      const gifs = data.data.map(giph => giph.id)
       this.setState({
-        gifs: result.data
-      });
-    });
+        gifs: gifs
+      })
+    })
   }
 
   selectGif(id) {
